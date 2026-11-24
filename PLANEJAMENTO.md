@@ -10,11 +10,11 @@ A assistente da plataforma se chama **Secretaria Pessoal**. Ela conversa no app 
 
 ## 1. O que a plataforma faz
 
-O rotina-flow separa quatro coisas que não se misturam: a rotina que se repete, a meta sem data, a lista de metas com prazo e o evento que acontece uma vez. Em volta disso ficam ofensiva, pontuação, recompensa e a Secretaria Pessoal.
+O rotina-flow separa quatro coisas que não se misturam: a rotina que se repete, a meta sem data, a lista de metas e o evento que acontece uma vez. Toda meta fica dentro de uma lista. As listas aparecem em três grupos: atuais, futuras e cumpridas. Em volta disso ficam ofensiva, pontuação, recompensa e a Secretaria Pessoal.
 
 Uso do dia a dia, em um toque sempre que der:
 
-- Ver o que fazer agora, entre a rotina de hoje e o evento de hoje, e concluir.
+- Abrir a Agenda e trocar Dia, Semana, Mês e Ano, vendo tarefas e eventos no mesmo lugar.
 - Ver pontuação do período e da categoria, ao lado da pontuação máxima.
 - Ver ofensiva positiva ou negativa de cada tarefa recorrente.
 - Resgatar recompensa quando a condição for cumprida.
@@ -32,10 +32,10 @@ Estas regras não ficam em aberto na implementação.
 | --- | --- | --- | --- |
 | Tarefa | Atividade da rotina | Sim, a cada dia, semana, mês, ano ou a cada N desses | Horário dentro da recorrência. Não tem “dia único” |
 | Evento | Atividade de uma vez | Não | Data e hora marcadas. Exemplo: levar a TV ao conserto amanhã ao meio-dia |
-| Meta | Objetivo a cumprir | Não | Sem data. O progresso vem de submetas, de uma tarefa ou de uma ofensiva |
-| Lista de metas | Conjunto de metas | Não | Prazo da lista. Exemplo: Lista de Metas para 2027 |
+| Meta | Objetivo a cumprir, sempre dentro de uma lista | Não | Sem data. O progresso vem de submetas, de uma tarefa ou de uma ofensiva |
+| Lista de metas | Conjunto de metas, em um dos três grupos | Não | Prazo nas listas criadas pela pessoa. A lista padrão “Outras Metas” não tem início nem fim |
 
-Tarefa nunca é gravada como evento. Evento nunca ganha recorrência. Meta nunca ganha data de início nem data de fim. O prazo fica na lista. Se a pessoa descrever algo ambíguo para a Secretaria, ela pergunta qual dos quatro é antes de propor a gravação.
+Tarefa nunca é gravada como evento. Evento nunca ganha recorrência. Meta nunca ganha data de início nem data de fim, e nunca fica solta: o destino é uma lista. Se a pessoa descrever algo ambíguo para a Secretaria, ela pergunta qual dos quatro é antes de propor a gravação.
 
 ### Idioma e edição
 
@@ -81,7 +81,7 @@ Exemplos de obrigatórias: manter a ofensiva do GitHub e a do Duolingo. Exemplo 
 
 - Uma data e uma hora de início. Hora de fim é opcional.
 - Não repete, não tem ofensiva e não entra na pontuação nem na pontuação máxima da rotina.
-- Entra em Hoje no dia marcado e no cartão “o que fazer agora” quando a hora chega.
+- Entra na visão Dia no dia marcado e no cartão “o que fazer agora” quando a hora chega.
 - Status: Não iniciada, Em andamento, Concluída.
 - Pode ter categoria, anotação e lembrete no Google Calendar.
 - Cancelar arquiva. Não vira tarefa.
@@ -158,14 +158,28 @@ A Secretaria propõe recompensa (por exemplo, academia em todos os dias da seman
 ### Metas e listas
 
 - Meta é objetivo. Não tem início, fim nem dia marcado.
-- Submeta é a mesma entidade, com meta pai. A árvore não tem limite de profundidade.
-- Meta pode pertencer a uma lista, estar ligada a uma tarefa, ou às duas.
+- Toda meta pertence a uma lista. Meta sem lista escolhida entra em “Outras Metas”.
+- Submeta é a mesma entidade, com meta pai, e fica na mesma lista da meta raiz. A árvore não tem limite de profundidade.
+- Uma meta pode, além da lista, estar ligada a uma tarefa.
 - Progresso do pai com filhos: concluídas ÷ filhas diretas. Ao concluir todas as filhas, o pai conclui. Dá para desligar.
-- Lista de metas é o único lugar com prazo. Tem título, início opcional e fim. “Lista de Metas para 2027” termina em 31/12/2027. “Major Goals by 2028” é uma lista com fim em 2028.
-- As metas dentro da lista continuam sem data. O prazo é da lista.
+- O status da meta é Não iniciada, Em andamento ou Concluída. Atual, futura e cumprida são grupos da lista, não da meta.
+- A conta nasce com a lista “Outras Metas”: sem início, sem fim, no grupo Atuais. Ela não muda de grupo, não recebe prazo e não pode ser excluída.
+- As outras listas têm fim obrigatório e início opcional. “Lista de Metas para 2027” termina em 31/12/2027. “Major Goals by 2028” é uma lista com fim em 2028. As metas dentro continuam sem data.
 - Exemplo: lista até 2028 → meta “Perder peso e ter um corpo saudável” → submeta “Publicar comparativos de antes e depois” → submeta “Vídeos curtos de frente, costas, lado e rosto, com música, diferença de peso, datas e medida do abdômen”.
-- Lista ou meta futura não aparece no ciclo ativo até ser promovida.
-- A lista conclui quando todas as metas dela concluem. Chegar no prazo também encerra o ciclo da lista para a Secretaria, mesmo que ainda exista meta aberta.
+- As listas ficam em três grupos, cada um com a sua seção na tela Metas:
+
+| Grupo | O que aparece |
+| --- | --- |
+| Listas de Metas Atuais | Listas em curso, com “Outras Metas” sempre em primeiro |
+| Listas de Metas Futuras | Listas ainda não entraram no ciclo. As metas delas esperam junto |
+| Listas de Metas Cumpridas | Listas em que todas as metas estão concluídas |
+
+- Lista com início no futuro nasce em Futuras. A pessoa pode mover uma lista entre Atuais e Futuras. Mover a lista leva todas as metas dela.
+- Quando a última meta aberta de uma lista que não é “Outras Metas” conclui, a lista vai para Cumpridas. “Outras Metas” permanece em Atuais, com as metas concluídas visíveis dentro dela.
+- Chegar no prazo não muda o grupo. A lista continua onde está e a Secretaria fala sobre ela, mesmo com meta ainda aberta.
+- Marcar uma lista como cumprida com meta ainda aberta pede o destino dessas metas. O destino padrão é “Outras Metas”. Só depois disso a lista entra em Cumpridas.
+- Reabrir uma lista cumprida devolve o grupo para Atuais.
+- Excluir uma lista que não é “Outras Metas” pede para onde vão as metas. O destino padrão é “Outras Metas”.
 
 ### O que fazer agora
 
@@ -177,6 +191,23 @@ No fuso da pessoa, entre ocorrências de tarefa e eventos de hoje ainda não con
 4. Empate: categoria cujo foco principal está marcado como prioridade da pessoa, depois ordem manual.
 
 Se nenhuma janela contém agora, mostrar o próximo horário do dia, seja tarefa ou evento. Tarefas sem horário ficam numa lista “Sem horário”, abaixo do destaque. Evento sem hora não existe.
+
+### Agenda
+
+Dia, semana, mês e ano são quatro modos da mesma tela, a Agenda. O seletor Dia | Semana | Mês | Ano fica sempre visível. Setas mudam o período, o título diz qual período está aberto e o botão Hoje volta para a data de hoje. A última escolha fica gravada no aparelho.
+
+Tarefa e evento aparecem juntos. A tarefa usa ícone de repetição e a cor da categoria. O evento usa ícone de alfinete e a cor da categoria. O concluído continua visível, com o visto marcado e o texto mais claro. Um filtro Tudo | Tarefas | Eventos existe, e Tudo é o padrão.
+
+O que vale a semana inteira, o mês inteiro ou o ano inteiro fica numa faixa acima da grade: “Nesta semana”, “Neste mês”, “Neste ano”. Evento fica no dia e na hora dele. A pontuação do período fica numa barra fina no topo, sem ocupar o lugar da lista.
+
+| Modo | Forma | O que a pessoa vê |
+| --- | --- | --- |
+| Dia | Linha do tempo | Horas do dia, com tarefa e evento na hora marcada. “Agora” no topo. Sem horário, embaixo |
+| Semana | Sete colunas no desktop. No celular, uma faixa com os sete dias e a lista do dia escolhido | Cada dia com blocos curtos. A faixa “Nesta semana” acima |
+| Mês | Grade do calendário | Até três marcas por dia, tarefa e evento com formas diferentes. O que passar disso vira “+N”. O dia escolhido abre a lista simples daquele dia |
+| Ano | Doze cartões, em grade | Cada mês com a contagem de tarefas, a contagem de eventos e a pontuação. Toque no mês abre o modo Mês daquele mês. A faixa “Neste ano” acima |
+
+Toque num item abre a tarefa ou o evento. Concluir acontece no próprio item, nos modos Dia e Semana e na lista do dia aberto no Mês. O botão de criar, na Agenda, pergunta se é tarefa ou evento e já usa o período que está na tela.
 
 ### Secretaria Pessoal
 
@@ -193,7 +224,7 @@ Em todo fechamento de período e em todo encerramento de lista, a fala inclui, n
 
 1. Um resumo curto do que fechou.
 2. Dica, se houver o que observar.
-3. Proposta de tarefa, de promoção de futura ou de meta nova, se fizer sentido.
+3. Proposta de tarefa, de promoção de tarefa futura ou de meta nova dentro de uma lista, se fizer sentido.
 4. Proposta de recompensa, se fizer sentido.
 5. A pergunta, sempre: “Tem algum evento novo para eu agendar?”
 
@@ -206,7 +237,7 @@ Escolha da futura a promover:
 3. Preferir o que se encaixa no foco principal das categorias.
 4. Se a pessoa recusou aquela futura na última sugestão, oferecer outra na próxima.
 
-No prazo de uma lista com meta ainda aberta, ela pode propor levar essas metas para uma lista nova. A lista nova só nasce com aceite.
+No prazo de uma lista com meta ainda aberta, ela pode propor levar essas metas para “Outras Metas” ou para uma lista nova. A lista nova só nasce com aceite. Meta nova proposta por ela sempre indica a lista de destino. Sem lista na proposta, o destino é “Outras Metas”. Meta para depois vai para uma lista do grupo Futuras.
 
 Modelo: Gemini Flash gratuito vigente, nome do modelo em Ajustes. A chave fica só no servidor. O nome Secretaria Pessoal não muda quando o modelo muda.
 
@@ -214,8 +245,8 @@ Classificação que o prompt dela obriga:
 
 - Acontece uma vez, com data ou hora → evento.
 - Se repete → tarefa.
-- Objetivo sem data → meta.
-- Conjunto com prazo → lista de metas.
+- Objetivo sem data → meta dentro de uma lista. Sem outra lista, “Outras Metas”. Para depois, uma lista do grupo Futuras.
+- Conjunto com prazo → lista de metas, no grupo Atuais ou Futuras conforme o início.
 - Dúvida → pergunta, sem gravar.
 
 ### WhatsApp
@@ -234,7 +265,7 @@ O Gemini continua gratuito. A conversa do WhatsApp Business Platform é cobrada 
 
 - Obrigatórias do Schedule entram ativas na primeira importação, como tarefas recorrentes.
 - Item de uma vez entra como evento, se a prévia tiver data e hora. Sem data, fica na prévia para a pessoa marcar ou mandar para futura.
-- Objetivo sem recorrência entra como meta. Conjunto com prazo entra como lista. O restante da rotina entra como tarefa futura.
+- Objetivo sem recorrência entra como meta dentro de uma lista. Conjunto com prazo entra como lista em Atuais ou Futuras. Objetivo solto entra em “Outras Metas”. Lista já inteira concluída entra em Cumpridas. O restante da rotina entra como tarefa futura.
 - A pessoa puxa mais itens depois, aos poucos, pela mesma tela.
 - A importação não apaga edição local. Itens já importados atualizam só os campos que a pessoa não marcou como editados localmente.
 - Não há sincronização contínua de volta para o Notion nesta versão.
@@ -364,15 +395,15 @@ Regra de consistência: no máximo uma das sequências ativas é maior que zero.
 
 ### ListaMetas
 
-`Id`, `UsuarioId`, `CategoriaId` nulo, `Titulo`, `Descricao`, `Icone`, `Inicio` nulo, `Fim`, `Situacao` (Ativa, Futura, Concluida, Arquivada), `NotionPageId`.
+`Id`, `UsuarioId`, `CategoriaId` nulo, `Titulo`, `Descricao`, `Icone`, `Inicio` nulo, `Fim` nulo, `Grupo` (Atual, Futura, Cumprida), `Padrao`, `NotionPageId`.
 
-`Fim` é o prazo da lista. Meta não copia esse campo.
+A lista com `Padrao` verdadeiro é “Outras Metas”: `Inicio` e `Fim` nulos, `Grupo` fixo em Atual. Nas demais, `Fim` é obrigatório e `Inicio` é opcional. Meta não copia esses campos.
 
 ### Meta
 
-`Id`, `UsuarioId`, `ListaId` nulo, `TarefaId` nulo, `MetaPaiId` nulo, `CategoriaId` nulo, `Titulo`, `Descricao`, `Icone`, `Status`, `Situacao` (Ativa, Futura, Arquivada), `Ordem`, `ConcluirPaiAutomaticamente`, `ModoRecompensa` (Nenhuma, NesteNo, SoNaRaiz), `ProgressoPorOfensiva`, `TarefaOfensivaId` nulo, `AlvoOfensiva` nulo, `NotionPageId`, `EditadoLocalmente`.
+`Id`, `UsuarioId`, `ListaId`, `TarefaId` nulo, `MetaPaiId` nulo, `CategoriaId` nulo, `Titulo`, `Descricao`, `Icone`, `Status`, `Ordem`, `ConcluirPaiAutomaticamente`, `ModoRecompensa` (Nenhuma, NesteNo, SoNaRaiz), `ProgressoPorOfensiva`, `TarefaOfensivaId` nulo, `AlvoOfensiva` nulo, `NotionPageId`, `EditadoLocalmente`.
 
-Sem `Inicio` e sem `Fim`.
+`ListaId` é obrigatório. Submeta usa a mesma lista da raiz. Sem `Inicio` e sem `Fim`.
 
 ### Recompensa
 
@@ -446,11 +477,13 @@ Arquivo de testes obrigatório antes da interface correspondente.
 18. Sugestão de promoção pula a futura com duas recusas seguidas.
 19. Âncora em janeiro de 2026, unidade mês, intervalo 3, gera janeiro, abril, julho e outubro, e não gera fevereiro.
 20. Concluir ou perder um evento não altera ofensiva nem pontuação.
-21. Evento de amanhã ao meio-dia fica fora do Hoje de hoje e dentro do Hoje de amanhã.
-22. Montar uma meta com início ou fim é rejeitado. Montar uma lista sem fim é rejeitado.
+21. Evento de amanhã ao meio-dia fica fora da visão Dia de hoje e dentro da visão Dia de amanhã.
+22. Gravar meta com lista vazia é rejeitado. Meta com início ou fim é rejeitada. Lista comum sem fim é rejeitada. “Outras Metas” com início ou fim, ou fora do grupo Atual, é rejeitada.
 23. Fechar um dia e concluir uma lista produzem, cada um, uma sugestão `PerguntarEvento`.
 24. Aceitar `CriarEvento` grava um evento e não grava tarefa.
 25. Mensagem com telefone diferente do vínculo não cria sugestão nem evento.
+26. Meta criada sem lista informada cai em “Outras Metas”. Concluir todas as metas de “Outras Metas” mantém essa lista em Atuais.
+27. A última meta aberta de uma lista comum, ao concluir, move a lista para Cumpridas. Lista em Futuras não aparece em Atuais.
 
 ## 7. API
 
@@ -463,10 +496,10 @@ Prefixo `/api`. Cookie de autenticação. Respostas de erro em português, com c
 | Tarefas | CRUD, arquivar, tornar futura, promover, reordenar, mover de pai |
 | Ocorrências | listar por intervalo, mudar status, concluir, reabrir |
 | Eventos | CRUD, arquivar, concluir, listar por intervalo |
-| Hoje | o que fazer agora, rotina do dia, eventos do dia, pontuação do dia |
-| Períodos | semana, mês, ano, fechar |
+| Agenda | Um intervalo por modo (dia, semana, mês, ano): ocorrências, eventos, faixa do período e pontuação |
+| Períodos | fechar dia, semana, mês e ano |
 | Ofensivas | listar, detalhe, ligar/desligar na tarefa |
-| Listas e metas | CRUD da árvore, promover, arquivar, concluir. Meta sem campos de data |
+| Listas e metas | Listar por grupo (Atuais, Futuras, Cumpridas), CRUD da árvore, mover lista de grupo, mover meta de lista. Meta exige lista e não tem data |
 | Recompensas | CRUD, condições, elegibilidade do período, resgatar, desfazer resgate |
 | Anotações | CRUD no vínculo |
 | Pontuação | geral e por categoria, período aberto e fechamentos |
@@ -482,27 +515,24 @@ Aceitar sugestão aplica o `PayloadJson` já validado no domínio: criar tarefas
 
 Navegação inferior no celular e lateral no desktop:
 
-Hoje, Semana, Metas, Secretaria, Mais.
+Agenda, Metas, Secretaria, Mais.
 
 O botão da Secretaria fica também flutuante nas outras telas e abre a conversa.
 
-Mais abre: Mês, Ano, Eventos, Futuras, Recompensas, Ofensivas, Calendário, Notion, Categorias, Ajustes.
+Mais abre: Eventos, Futuras, Recompensas, Ofensivas, Calendário, Notion, Categorias, Ajustes.
 
 Ícone em categoria, tipo, status, ofensiva, recompensa, meta, evento e ação principal. Toque grande para concluir. Evento usa ícone de marcação única. Tarefa usa ícone de repetição.
 
 | Tela | Conteúdo |
 | --- | --- |
 | Entrar | Primeiro acesso cria a conta. Depois, e-mail e senha |
-| Hoje | Cartão “agora”, eventos de hoje, pontuação do dia geral e por categoria, obrigatórias, normais, extras, sem horário, ofensivas em risco, recompensa do dia |
-| Semana | Grade dos sete dias com a rotina e os eventos do dia, tarefas semanais, pontuação, ofensiva da semana, recompensa |
-| Mês | Idem no mês, incluindo o acumulado e os eventos |
-| Ano | Idem no ano |
+| Agenda | Seletor Dia, Semana, Mês e Ano, com as formas da seção Agenda. Tarefas e eventos no mesmo período. Barra de pontuação, ofensiva em risco e recompensa do período |
 | Tarefa | Cabeçalho, recorrência, status, pontos, ofensiva, subtarefas, metas ligadas, anotações, histórico, lembrete |
 | Evento | Data, hora, status, categoria, anotação, lembrete. Sem recorrência e sem ponto |
 | Eventos | Próximos e concluídos, criar e editar |
-| Futuras | Tarefas e metas futuras, promover na mão, ver por que a Secretaria ainda não sugeriu |
-| Listas de metas | Cartões com prazo e progresso |
-| Árvore da lista | Metas sem data, status, recompensa do nó, vínculo com ofensiva |
+| Futuras | Tarefas futuras da rotina, promover na mão, ver por que a Secretaria ainda não sugeriu. Listas futuras ficam na tela Metas |
+| Metas | Três seções: Listas de Metas Atuais, Listas de Metas Futuras e Listas de Metas Cumpridas. “Outras Metas” abre a seção Atuais |
+| Árvore da lista | Metas sem data, status, recompensa do nó, vínculo com ofensiva, mover para outra lista |
 | Recompensas | Definições e resgates do período atual |
 | Ofensivas | Positivas e negativas separadas, nunca um número líquido |
 | Calendário | Conectar Google, escolher quais tarefas e eventos geram lembrete, minutos antes |
@@ -513,7 +543,7 @@ Mais abre: Mês, Ano, Eventos, Futuras, Recompensas, Ofensivas, Calendário, Not
 
 Estados vazios em toda lista: o que é, e um botão para criar ou importar.
 
-Formulários de criar e editar usam os mesmos campos do modelo. Não há entidade sem tela de edição, fora sessão, mensagem, fechamento e item importado, que são sistema. O formulário de meta não oferece data. O formulário de lista exige o prazo. O formulário de evento exige data e hora e não oferece repetição. O formulário de tarefa exige unidade e intervalo.
+Formulários de criar e editar usam os mesmos campos do modelo. Não há entidade sem tela de edição, fora sessão, mensagem, fechamento e item importado, que são sistema. O formulário de meta não oferece data e pede a lista, com “Outras Metas” já selecionada. O formulário de lista comum exige o prazo e o grupo Atual ou Futura. “Outras Metas” edita título, ícone e descrição, sem datas e sem troca de grupo. O formulário de evento exige data e hora e não oferece repetição. O formulário de tarefa exige unidade e intervalo.
 
 ## 9. Integrações
 
@@ -524,8 +554,8 @@ Formulários de criar e editar usam os mesmos campos do modelo. Não há entidad
 - Saída JSON: uma fala em português e a lista de sugestões com tipo, título, texto e payload.
 - Payload de quebra: tarefas filhas propostas, ainda não salvas.
 - Payload de promoção: id local da futura e a recorrência de destino.
-- Payload de meta: título e lista de destino, sem data.
-- Payload de lista: título e fim.
+- Payload de meta: título e lista de destino, sem data. Lista omitida significa “Outras Metas”.
+- Payload de lista: título, fim e grupo Atual ou Futura.
 - Payload de recompensa: título, escopo e condição.
 - Payload de evento: título, início e fim opcional. Sem recorrência.
 - O ritual sempre inclui uma sugestão `PerguntarEvento`.
@@ -564,8 +594,9 @@ Ordem fixa da primeira entrega da importação:
 | Goal category | Categoria pelo mapa da seção 4 |
 | Max Score | Pontos da tarefa, se for número maior que zero. Senão, 1. Evento ignora ponto |
 | Status Not Started / In Progress / Done | Não iniciada / Em andamento / Concluída, se o item já estiver ativo |
-| Página com prazo que contém objetivos | Lista de metas. As filhas viram metas sem data |
-| Objetivo sem repetição | Meta |
+| Página com prazo que contém objetivos | Lista de metas em Atuais ou Futuras. As filhas viram metas sem data nessa lista |
+| Objetivo sem repetição e sem lista | Meta em “Outras Metas” |
+| Lista já concluída por inteiro | Grupo Cumpridas |
 | Página de rotina recorrente | Tarefa, com unidade e intervalo |
 | Página de uma vez, com data | Evento |
 | Marca de obrigatória, quando existir no banco | Tipo Obrigatória e situação Ativa |
@@ -583,14 +614,14 @@ Enquanto o apêndice de propriedades não existir, a fase Notion não começa a 
 - Ícones 192 e 512, mais máscara.
 - Service worker gerado pelo Vite. App shell em cache.
 - IndexedDB guarda o dia aberto e uma fila de mudanças de status de ocorrência e de evento.
-- Sem rede, Hoje abre com a última cópia e concluir entra na fila.
+- Sem rede, a visão Dia abre com a última cópia e concluir entra na fila.
 - Com rede, a fila envia em ordem. Conflito de status: o mais recente no aparelho ganha se o servidor não tiver fechado o item. Se já fechou, o aparelho fica com o estado do servidor e avisa.
 - Secretaria, WhatsApp, Notion e Google exigem rede e mostram isso.
 - Instalável no Chrome e no Edge, celular e desktop. HTTPS fora de localhost.
 
 ## 11. Ordem de execução
 
-Não antecipar tela de uma fase se o domínio dela ainda não tem teste. Não conectar Gemini, WhatsApp, Google ou Notion antes do núcleo local estar utilizável no Hoje.
+Não antecipar tela de uma fase se o domínio dela ainda não tem teste. Não conectar Gemini, WhatsApp, Google ou Notion antes do núcleo local estar utilizável na visão Dia da Agenda.
 
 Critério de saída de cada fase está na última tarefa da fase.
 
@@ -608,7 +639,7 @@ Critério de saída de cada fase está na última tarefa da fase.
 ### Fase 1 — Conta, categorias e tarefas
 
 - [ ] 1.1 Entidades Usuario, Categoria e Tarefa, migração inicial e seed das cinco categorias da seção 4.
-- [ ] 1.2 Primeiro acesso cria o usuário. Entrar e sair com cookie. Rotas da API recusam anônimo.
+- [ ] 1.2 Primeiro acesso cria o usuário e a lista “Outras Metas”, sem início, sem fim, no grupo Atuais. Entrar e sair com cookie. Rotas da API recusam anônimo.
 - [ ] 1.3 CRUD de categorias com ícone, cor, foco, ordem e arquivar.
 - [ ] 1.4 CRUD de tarefas com tipo, unidade, intervalo, âncora, dias, pontos, horário, pai, agrupadora e “também pontua”. Recusar tarefa sem recorrência.
 - [ ] 1.5 Telas Entrar, Categorias e lista de Tarefas com criar e editar. Ícones nos tipos e nas categorias.
@@ -618,44 +649,44 @@ Critério de saída de cada fase está na última tarefa da fase.
 
 - [ ] 2.1 Gerar ocorrências do intervalo pedido a partir da recorrência e do fuso, incluindo o teste 19. Não gerar para situação Futura ou Arquivada.
 - [ ] 2.2 Mudar status, concluir e reabrir. Status do pai agrupador segue os filhos.
-- [ ] 2.3 Endpoint e cartão “o que fazer agora” com a ordem da seção 2, ainda só com tarefas.
-- [ ] 2.4 Tela Hoje: agora, obrigatórias, normais, extras, sem horário. Concluir em um controle só.
+- [ ] 2.3 Endpoint da Agenda para o dia e cartão “o que fazer agora” com a ordem da seção 2, ainda só com tarefas.
+- [ ] 2.4 Agenda com o seletor dos quatro modos. Visão Dia em linha do tempo: agora, horários, sem horário. Concluir em um controle só. Semana, Mês e Ano já trocam o período e mostram o título, com o miolo preenchido na fase 5.
 - [ ] 2.5 Tela da tarefa: dados, recorrência, subtarefas e anotações.
-- [ ] 2.6 Saída: uma quinta-feira de teste mostra a tarefa de quinta em Hoje e não mostra a tarefa futura nem a trimestral fora do mês âncora.
+- [ ] 2.6 Saída: uma quinta-feira de teste mostra a tarefa de quinta na visão Dia e não mostra a tarefa futura nem a trimestral fora do mês âncora.
 
 ### Fase 3 — Eventos
 
 - [ ] 3.1 Entidade Evento, CRUD e testes 20 e 21.
-- [ ] 3.2 Incluir o evento de hoje no Hoje e no “o que fazer agora”, na ordem da seção 2.
-- [ ] 3.3 Telas Evento e Eventos, com data e hora obrigatórias e sem campo de repetição.
-- [ ] 3.4 Semana e, quando existirem, mês e ano, mostram o evento no dia dele.
-- [ ] 3.5 Saída: “Levar a TV ao conserto” amanhã ao meio-dia não aparece no Hoje de hoje, aparece amanhã e não cria tarefa nem ofensiva.
+- [ ] 3.2 Incluir o evento na visão Dia e no “o que fazer agora”, na ordem da seção 2, com ícone de alfinete ao lado do ícone de repetição da tarefa.
+- [ ] 3.3 Telas Evento e Eventos, com data e hora obrigatórias e sem campo de repetição. O criar da Agenda pergunta tarefa ou evento.
+- [ ] 3.4 O evento entra no payload da Agenda do dia dele, para as visões Semana, Mês e Ano usarem o mesmo dado.
+- [ ] 3.5 Saída: “Levar a TV ao conserto” amanhã ao meio-dia não aparece no Dia de hoje, aparece na linha do meio-dia de amanhã e não cria tarefa nem ofensiva.
 
 ### Fase 4 — Ofensivas
 
 - [ ] 4.1 Serviço de domínio da ofensiva com os testes 1 a 8 da seção 6.
 - [ ] 4.2 Ao fechar a ocorrência (fim do ciclo no fuso), avaliar ofensiva uma única vez. Evento não passa por esse serviço.
-- [ ] 4.3 Job leve na API: ao atender qualquer leitura de Hoje, fechar o que já venceu e ainda não foi avaliado.
+- [ ] 4.3 Job leve na API: ao atender qualquer leitura da Agenda, fechar o que já venceu e ainda não foi avaliado.
 - [ ] 4.4 Ofensiva do período só com obrigatórias. Ofensiva por tarefa respeita `OfensivaLigada`.
-- [ ] 4.5 Tela Ofensivas e o bloco de ofensiva na tarefa e no Hoje. Positiva e negativa em indicadores separados.
+- [ ] 4.5 Tela Ofensivas e o bloco de ofensiva na tarefa e na barra da visão Dia. Positiva e negativa em indicadores separados.
 - [ ] 4.6 Saída: o exemplo das cinco quintas e do cumprimento seguinte passa no teste e aparece na tela como positiva 1.
 
 ### Fase 5 — Pontuação e períodos
 
 - [ ] 5.1 Serviço de pontuação com os testes 9 a 13 e 17 no que couber sem recompensa ainda.
-- [ ] 5.2 Telas Semana, Mês e Ano com pontuação geral, pontuação máxima e quebra por categoria. Eventos visíveis e fora da conta.
+- [ ] 5.2 Completar os modos da Agenda. Semana em colunas no desktop e em faixa mais lista no celular. Mês em grade, com até três marcas por dia e a lista do dia escolhido. Ano em doze cartões. Faixas “Nesta semana”, “Neste mês” e “Neste ano”. Tarefa e evento distinguíveis. Pontuação na barra. Evento visível e fora da conta.
 - [ ] 5.3 Fechamento grava `FechamentoPeriodo` sem chamar a Secretaria ainda.
 - [ ] 5.4 Histórico de ocorrências na tela da tarefa.
 - [ ] 5.5 Saída: um dia com obrigatória de 1 ponto, normal de 2, extra de 1 e um evento concluído mostra máxima 4. Concluir só a extra mostra pontuação 1 de 4. O mês soma esse dia e a trimestral que cair nele.
 
 ### Fase 6 — Metas e listas
 
-- [ ] 6.1 ListaMetas com prazo obrigatório e Meta sem data, em árvore, progresso e conclusão automática. Testes 14 a 16 e 22.
-- [ ] 6.2 Meta ligada a tarefa e meta ligada a ofensiva com alvo, ainda sem data na meta.
-- [ ] 6.3 Telas de listas, árvore, criar, editar, aninhar, arquivar e promover futura. O formulário de meta não mostra calendário.
-- [ ] 6.4 Na tela da tarefa, aba de metas ligadas àquela tarefa.
-- [ ] 6.5 Situação Futura fica fora das telas ativas e dentro de Futuras.
-- [ ] 6.6 Saída: dá para montar a Lista de Metas para 2027, ou a lista até 2028, com a meta de corpo, a submeta de posts e a submeta dos vídeos curtos, e concluir de baixo para cima. Nenhuma meta fica com data própria.
+- [ ] 6.1 ListaMetas e Meta sem data, em árvore, progresso e conclusão automática. Testes 14 a 16, 22, 26 e 27. “Outras Metas” já existe desde a conta.
+- [ ] 6.2 Meta ligada a tarefa e meta ligada a ofensiva com alvo, ainda sem data e sempre com lista.
+- [ ] 6.3 Tela Metas com as três seções: Listas de Metas Atuais, Listas de Metas Futuras e Listas de Metas Cumpridas. Criar, editar, aninhar, mover de lista e mover de grupo.
+- [ ] 6.4 Na tela da tarefa, aba de metas ligadas àquela tarefa, mostrando a lista de cada uma.
+- [ ] 6.5 Lista futura aparece só em Listas de Metas Futuras. A tela Futuras do Mais continua só com tarefas da rotina.
+- [ ] 6.6 Saída: “Outras Metas” está em Atuais, sem datas, e recebe uma meta criada sem escolher lista. A Lista de Metas para 2027, ou a lista até 2028, fica no grupo escolhido, com a meta de corpo, a submeta de posts e a submeta dos vídeos curtos. Concluir essa árvore leva a lista para Cumpridas. Nenhuma meta fica solta nem com data própria.
 
 ### Fase 7 — Recompensas
 
@@ -663,7 +694,7 @@ Critério de saída de cada fase está na última tarefa da fase.
 - [ ] 7.2 Seed das quatro recompensas de horizonte, condição “todas as obrigatórias”, textos editáveis e genéricos (a pessoa troca pelo prêmio real).
 - [ ] 7.3 Elegibilidade ao vivo e resgate único por período. Desfazer resgate enquanto o período não fechou.
 - [ ] 7.4 Modo de recompensa da meta: nenhuma, neste nó, só na raiz. Resgate ao concluir. Recompensa opcional da lista.
-- [ ] 7.5 Tela Recompensas e o selo de resgate no Hoje, Semana, Mês, Ano e na meta.
+- [ ] 7.5 Tela Recompensas e o selo de resgate na barra da Agenda, em qualquer modo, e na meta.
 - [ ] 7.6 Saída: dia com obrigatória pendente não resgata. Dia com obrigatórias feitas resgata, mesmo com extra pendente e com evento pendente.
 
 ### Fase 8 — Secretaria Pessoal no app
@@ -697,13 +728,13 @@ Critério de saída de cada fase está na última tarefa da fase.
 - [ ] 11.2 Ler Schedule e escrever `docs/notion-schedule.md` com bancos, propriedades e um exemplo de obrigatória, um de rotina comum, um de objetivo e, se existir, um de item único. Parar aqui se o mapa da seção 9 não bater com o banco real, ajustar o mapa e só então seguir.
 - [ ] 11.3 Pré-visualização: cada página com destino proposto (tarefa, evento, meta ou lista) e correção manual.
 - [ ] 11.4 Confirmar a seleção. Segunda visita não duplica `NotionPageId` e não pisa campo `EditadoLocalmente`.
-- [ ] 11.5 Saída: obrigatórias escolhidas aparecem na rotina ativa. Metas entram sem data, dentro de lista quando houver prazo. Evento entra no dia marcado. O resto da rotina aparece em Futuras. Uma reimportação não duplica.
+- [ ] 11.5 Saída: obrigatórias escolhidas aparecem na rotina ativa. Toda meta entra sem data e dentro de uma lista: a lista importada, ou “Outras Metas”. Lista futura aparece em Listas de Metas Futuras e lista inteira concluída em Cumpridas. Evento entra no dia marcado. O resto da rotina aparece em Futuras. Uma reimportação não duplica.
 
 ### Fase 12 — PWA, offline e acabamento
 
 - [ ] 12.1 Manifesto, ícones, service worker e instalação.
-- [ ] 12.2 Fila offline de status no Hoje, ocorrência e evento, com a regra de conflito da seção 10.
-- [ ] 12.3 Revisar todas as telas da seção 8 no celular estreito e no desktop: vazio, erro de rede, carregando, formulário de edição, conversa da Secretaria.
+- [ ] 12.2 Fila offline de status na visão Dia, ocorrência e evento, com a regra de conflito da seção 10.
+- [ ] 12.3 Revisar todas as telas da seção 8 no celular estreito e no desktop, inclusive os quatro modos da Agenda: vazio, erro de rede, carregando, formulário de edição, conversa da Secretaria.
 - [ ] 12.4 Textos restantes em português. Nenhum estado interno em inglês na interface (`Not Started`, `Done`, `Score`). O nome Secretaria Pessoal aparece na conversa, no botão e nas mensagens.
 - [ ] 12.5 README com: como subir, como criar a conta, onde pôr as chaves, como instalar o PWA, como conectar Google, Notion e WhatsApp.
 - [ ] 12.6 Saída: Lighthouse do Vite em preview marca o app como instalável. Concluir uma tarefa e um evento com a API desligada e, ao ligar de novo, o status chega no servidor se o item ainda estava aberto.
@@ -713,16 +744,16 @@ Critério de saída de cada fase está na última tarefa da fase.
 Executar uma vez, na ordem, com dados de verdade ou cópia reduzida do Schedule.
 
 - [ ] 13.1 Criar a conta e ver as cinco categorias com os focos do seed.
-- [ ] 13.2 Importar o Schedule. Conferir obrigatórias ativas, metas sem data e o restante da rotina em Futuras.
-- [ ] 13.3 Montar a Lista de Metas para 2027, ou a lista até 2028, com pelo menos uma meta e uma submeta, nenhuma delas com data própria.
-- [ ] 13.4 Criar o evento da TV para o dia seguinte ao meio-dia e vê-lo só naquele dia.
+- [ ] 13.2 Importar o Schedule. Conferir obrigatórias ativas, metas dentro de listas e o restante da rotina em Futuras.
+- [ ] 13.3 Ver “Outras Metas” em Listas de Metas Atuais, sem datas. Montar a Lista de Metas para 2027, ou a lista até 2028, numa das três seções, com pelo menos uma meta e uma submeta, nenhuma delas com data própria. Concluir essa lista e vê-la em Listas de Metas Cumpridas.
+- [ ] 13.4 Criar o evento da TV para o dia seguinte ao meio-dia. Vê-lo na linha do tempo desse dia, na coluna ou faixa da semana e na marca do mês. No dia de hoje, ele não aparece.
 - [ ] 13.5 Concluir o dia. Ver pontuação, pontuação máxima, categorias e ofensiva, sem o evento na conta.
 - [ ] 13.6 Resgatar a recompensa diária só quando as obrigatórias estiverem feitas.
 - [ ] 13.7 Fechar o dia com a Secretaria ligada. Ver a pergunta do evento. Recusar uma futura. Na fala seguinte, ver outra futura se houver mais de uma.
 - [ ] 13.8 Responder na conversa com um evento novo, aceitar e editar o resultado.
 - [ ] 13.9 Vincular o WhatsApp, mandar uma frase de lá e ver a mesma troca no app.
 - [ ] 13.10 Ligar um lembrete de tarefa e o do evento e ver os dois no Google Calendar.
-- [ ] 13.11 Instalar o PWA, abrir Hoje por ele e abrir a Secretaria pelo botão flutuante.
+- [ ] 13.11 Instalar o PWA, abrir a Agenda na visão Dia e passar por Semana, Mês e Ano, com tarefas e eventos reconhecíveis em cada forma. Abrir a Secretaria pelo botão flutuante.
 
 ## 12. Definição de pronto
 
@@ -730,8 +761,9 @@ A aplicação está completa quando a fase 13 fecha e isto é verdade:
 
 - Tarefa só existe com repetição: dia, semana, mês, ano ou a cada N dessas unidades.
 - Evento acontece uma vez, com data e hora, fora da ofensiva e fora da pontuação.
-- Meta não tem data. Lista de metas tem prazo.
-- Listas, metas e submetas aninhadas funcionam, inclusive meta futura.
+- Meta não tem data e sempre pertence a uma lista. “Outras Metas” não tem prazo e fica em Atuais. As outras listas têm prazo.
+- As listas aparecem em Listas de Metas Atuais, Listas de Metas Futuras e Listas de Metas Cumpridas.
+- Listas, metas e submetas aninhadas funcionam. A submeta permanece na lista da meta raiz.
 - Ofensiva positiva e negativa seguem o exemplo da quinta-feira, com teste automático.
 - Pontuação e pontuação máxima existem no geral e por categoria.
 - Obrigatórias, normais e extras têm os efeitos da seção 2.
@@ -739,7 +771,8 @@ A aplicação está completa quando a fase 13 fecha e isto é verdade:
 - A Secretaria Pessoal conversa no app e no WhatsApp, sugere, pergunta se há evento novo ao fechar período ou lista, e só grava com aceite.
 - Google Calendar recebe lembrete da rotina e do evento.
 - Notion entra pela prévia, obrigatórias primeiro, objetivos como meta, item único como evento, o resto da rotina como futuro, sem duplicar.
-- PWA instala e o Hoje conclui offline.
+- A Agenda troca Dia, Semana, Mês e Ano, cada um com a forma da seção Agenda, e mostra tarefa e evento juntos.
+- PWA instala e a visão Dia conclui offline.
 - Tudo o que a pessoa configura tem tela de edição.
 - A interface está em português.
 
